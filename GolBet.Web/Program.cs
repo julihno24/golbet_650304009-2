@@ -37,7 +37,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Account/Login";           // Redirige al login si no está autenticado[cite: 8]
+    options.LoginPath = "/Account/Login";            // Redirige al login si no está autenticado
     options.AccessDeniedPath = "/Account/AccessDenied";  // Redirige si no tiene el rol[cite: 8]
 });
 
@@ -46,6 +46,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 
 // Specific repositories
 builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IBetRepository, BetRepository>();
 
 // AutoMapper: scans the assembly containing MappingProfile for all profiles
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -53,6 +54,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Business services
 builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IBetService, BetService>();
 
 var app = builder.Build();
 
