@@ -9,8 +9,11 @@ using GolBet.Services.Mapping;
 using Microsoft.AspNetCore.Identity; // Nuevo para Identity
 using Microsoft.EntityFrameworkCore;
 
-// Configuración de cultura es-CO
+// Configuración de cultura es-CO ajustada por el profesor
 var culture = new CultureInfo("es-CO");
+culture.NumberFormat = (NumberFormatInfo)CultureInfo.InvariantCulture.NumberFormat.Clone();
+culture.NumberFormat.NumberGroupSeparator = "";
+
 CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 

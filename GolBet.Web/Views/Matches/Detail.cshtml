@@ -1,283 +1,286 @@
 @* GolBet.Web/Views/Matches/Detail.cshtml *@ 
 
-@using GolBet.Entities.Enums 
+@using GolBet.Entities.Enums
 
-@using GolBet.Web.Helpers 
+@using GolBet.Web.Helpers
 
-@model GolBet.Services.DTOs.MatchDetailDto 
+@model GolBet.Services.DTOs.MatchDetailDto
 
-@{ 
+@{
 
-    ViewData["Title"] = $"{Model.HomeTeamName} vs {Model.AwayTeamName}"; 
+    ViewData["Title"] = $"{Model.HomeTeamName} vs {Model.AwayTeamName}";
 
-} 
-
- 
-
-<nav aria-label="breadcrumb"> 
-
-    <ol class="breadcrumb"> 
-
-        <li class="breadcrumb-item"><a asp-action="Index">Partidos</a></li> 
-
-        <li class="breadcrumb-item active">@Model.HomeTeamName vs @Model.AwayTeamName</li> 
-
-    </ol> 
-
-</nav> 
+}
 
  
 
-<div class="card shadow-sm"> 
+<nav aria-label="breadcrumb">
 
-    <div class="card-header d-flex justify-content-between align-items-center"> 
+    <ol class="breadcrumb">
 
-        <span>📅 @Model.Date.ToColombiaTime().ToString("dddd dd MMM yyyy · h:mm tt")</span> 
+        <li class="breadcrumb-item"><a asp-action="Index">Partidos</a></li>
 
-        @switch (Model.Status) 
+        <li class="breadcrumb-item active">@Model.HomeTeamName vs @Model.AwayTeamName</li>
 
-        { 
+    </ol>
 
-            case MatchStatus.Scheduled: 
-
-                <span class="badge bg-primary">Programado</span> 
-
-                break; 
-
-            case MatchStatus.InProgress: 
-
-                <span class="badge bg-warning text-dark">En juego</span> 
-
-                break; 
-
-            case MatchStatus.Finished: 
-
-                <span class="badge bg-secondary">Finalizado</span> 
-
-                break; 
-
-        } 
-
-    </div> 
+</nav>
 
  
 
-    <div class="card-body"> 
+<div class="card shadow-sm">
 
-        <div class="d-flex justify-content-around align-items-center text-center py-3"> 
+    <div class="card-header d-flex justify-content-between align-items-center">
 
-            <div> 
+        <span>📅 @Model.Date.ToColombiaTime().ToString("dddd dd MMM yyyy · h:mm tt")</span>
 
-                <img src="@(Model.HomeTeamCrestUrl ?? "https://placehold.co/100x100/e9ecef/6c757d?text=FC")" 
+        @switch (Model.Status)
 
-                     alt="@Model.HomeTeamName" width="100" height="100" class="mb-2" /> 
+        {
 
-                <h4>@Model.HomeTeamName</h4> 
+            case MatchStatus.Scheduled:
 
-            </div> 
+                <span class="badge bg-primary">Programado</span>
 
- 
+                break;
 
-            <div class="px-4 text-nowrap"> 
+            case MatchStatus.InProgress:
 
-                @if (Model.Status == MatchStatus.Finished) 
+                <span class="badge bg-warning text-dark">En juego</span>
 
-                { 
+                break;
 
-                    <span class="display-4 fw-bold">@Model.HomeGoals - @Model.AwayGoals</span> 
+            case MatchStatus.Finished:
 
-                } 
+                <span class="badge bg-secondary">Finalizado</span>
 
-                else 
+                break;
 
-                { 
+        }
 
-                    <span class="display-6 text-muted">vs</span> 
-
-                } 
-
-            </div> 
+    </div>
 
  
 
-            <div> 
+    <div class="card-body">
 
-                <img src="@(Model.AwayTeamCrestUrl ?? "https://placehold.co/100x100/e9ecef/6c757d?text=FC")" 
+        <div class="d-flex justify-content-around align-items-center text-center py-3">
 
-                     alt="@Model.AwayTeamName" width="100" height="100" class="mb-2" /> 
+            <div>
 
-                <h4>@Model.AwayTeamName</h4> 
+                <img src="@(Model.HomeTeamCrestUrl ?? "https://placehold.co/100x100/e9ecef/6c757d?text=FC")"
+                     alt="@Model.HomeTeamName" width="100" height="100" class="mb-2" />
 
-            </div> 
+                <h4>@Model.HomeTeamName</h4>
 
-        </div> 
-
- 
-
-        <hr /> 
+            </div>
 
  
 
-        <h5 class="text-center mb-3">Cuotas</h5> 
+            <div class="px-4 text-nowrap">
 
-        <div class="row g-3 justify-content-center"> 
+                @if (Model.Status == MatchStatus.Finished)
 
-            <div class="col-md-3"> 
+                {
 
-                <div class="border rounded text-center py-3"> 
+                    <span class="display-4 fw-bold">@Model.HomeGoals - @Model.AwayGoals</span>
 
-                    <div class="text-muted">1 · @Model.HomeTeamName</div> 
+                }
 
-                    <div class="fs-3 fw-bold">@Model.HomeOdds.ToString("0.00")</div> 
+                else
 
-                </div> 
+                {
 
-            </div> 
+                    <span class="display-6 text-muted">vs</span>
 
-            <div class="col-md-3"> 
+                }
 
-                <div class="border rounded text-center py-3"> 
-
-                    <div class="text-muted">X · Empate</div> 
-
-                    <div class="fs-3 fw-bold">@Model.DrawOdds.ToString("0.00")</div> 
-
-                </div> 
-
-            </div> 
-
-            <div class="col-md-3"> 
-
-                <div class="border rounded text-center py-3"> 
-
-                    <div class="text-muted">2 · @Model.AwayTeamName</div> 
-
-                    <div class="fs-3 fw-bold">@Model.AwayOdds.ToString("0.00")</div> 
-
-                </div> 
-
-            </div> 
-
-        </div> 
-
-        @if (Model.Status == MatchStatus.Scheduled) 
-
-        { 
-
-            @if (User.IsInRole("Apostador")) 
-
-            { 
-
-                <hr /> 
-
-                <h5 class="text-center mb-3">🎯 Haz tu apuesta</h5> 
-
-                <form asp-controller="Bets" asp-action="Place" method="post" 
-
-                      class="col-md-8 mx-auto"> 
-
-                    <input type="hidden" name="MatchId" value="@Model.Id" /> 
+            </div>
 
  
 
-                    <div class="input-group mb-3"> 
+            <div>
 
-                        <span class="input-group-text">Monto</span> 
+                <img src="@(Model.AwayTeamCrestUrl ?? "https://placehold.co/100x100/e9ecef/6c757d?text=FC")"
+                     alt="@Model.AwayTeamName" width="100" height="100" class="mb-2" />
 
-                        <input name="Amount" type="number" step="100" min="1" value="1000" 
+                <h4>@Model.AwayTeamName</h4>
 
-                               class="form-control" /> 
+            </div>
 
-                        <span class="input-group-text">FutCoins</span> 
-
-                    </div> 
-
- 
-
-                    <div class="row g-2 text-center"> 
-
-                        <div class="col"> 
-
-                            <button type="submit" name="Pick" value="Home" 
-
-                                    class="btn btn-outline-success w-100"> 
-
-                                1 · @Model.HomeOdds.ToString("0.00") 
-
-                            </button> 
-
-                        </div> 
-
-                        <div class="col"> 
-
-                            <button type="submit" name="Pick" value="Draw" 
-
-                                    class="btn btn-outline-success w-100"> 
-
-                                X · @Model.DrawOdds.ToString("0.00") 
-
-                            </button> 
-
-                        </div> 
-
-                        <div class="col"> 
-
-                            <button type="submit" name="Pick" value="Away" 
-
-                                    class="btn btn-outline-success w-100"> 
-
-                                2 · @Model.AwayOdds.ToString("0.00") 
-
-                            </button> 
-
-                        </div> 
-
-                    </div> 
-
-                    <small class="text-muted d-block text-center mt-2"> 
-
-                        Elige tu monto y haz clic en la cuota para apostar 
-
-                    </small> 
-
-                </form> 
-
-            } 
-
-            else if (!User.Identity!.IsAuthenticated) 
-
-            { 
-
-                <div class="text-center mt-3"> 
-
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-success"> 
-
-                        Inicia sesión para apostar 
-
-                    </a> 
-
-                </div> 
-
-            } 
-
-        } 
-
-    </div> 
+        </div>
 
  
 
-    <div class="card-footer d-flex justify-content-between align-items-center"> 
+        <hr />
 
-        <small class="text-muted">🎟️ @Model.TotalBets apuestas realizadas</small> 
+ 
 
-        @if (User.IsInRole("Admin")) 
+        <h5 class="text-center mb-3">Cuotas</h5>
 
-        { 
+        <div class="row g-3 justify-content-center">
 
-            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Editar</a> 
+            <div class="col-md-3">
 
-        } 
+                <div class="border rounded text-center py-3">
 
-    </div> 
+                    <div class="text-muted">1 · @Model.HomeTeamName</div>
 
-</div> 
+                    <div class="fs-3 fw-bold">@Model.HomeOdds.ToString("0.00")</div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="border rounded text-center py-3">
+
+                    <div class="text-muted">X · Empate</div>
+
+                    <div class="fs-3 fw-bold">@Model.DrawOdds.ToString("0.00")</div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <div class="border rounded text-center py-3">
+
+                    <div class="text-muted">2 · @Model.AwayTeamName</div>
+
+                    <div class="fs-3 fw-bold">@Model.AwayOdds.ToString("0.00")</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        @if (Model.Status == MatchStatus.Scheduled)
+
+        {
+
+            @if (User.IsInRole("Apostador"))
+
+            {
+
+                <hr />
+
+                <h5 class="text-center mb-3">🎯 Haz tu apuesta</h5>
+
+                <form asp-controller="Bets" asp-action="Place" method="post"
+                      class="col-md-8 mx-auto">
+
+                    <input type="hidden" name="MatchId" value="@Model.Id" />
+
+ 
+
+                    <div class="input-group mb-3">
+
+                        <span class="input-group-text">Monto</span>
+
+                        <input name="Amount" type="number" step="100" min="1" value="1000"
+                               class="form-control" />
+
+                        <span class="input-group-text">FutCoins</span>
+
+                    </div>
+
+ 
+
+                    <div class="row g-2 text-center">
+
+                        <div class="col">
+
+                            <button type="submit" name="Pick" value="Home"
+                                    class="btn btn-outline-success w-100">
+
+                                1 · @Model.HomeOdds.ToString("0.00")
+
+                            </button>
+
+                        </div>
+
+                        <div class="col">
+
+                            <button type="submit" name="Pick" value="Draw"
+                                    class="btn btn-outline-success w-100">
+
+                                X · @Model.DrawOdds.ToString("0.00")
+
+                            </button>
+
+                        </div>
+
+                        <div class="col">
+
+                            <button type="submit" name="Pick" value="Away"
+                                    class="btn btn-outline-success w-100">
+
+                                2 · @Model.AwayOdds.ToString("0.00")
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <small class="text-muted d-block text-center mt-2">
+
+                        Elige tu monto y haz clic en la cuota para apostar
+
+                    </small>
+
+                </form>
+
+            }
+
+            else if (!User.Identity!.IsAuthenticated)
+
+            {
+
+                <div class="text-center mt-3">
+
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-success">
+
+                        Inicia sesión para apostar
+
+                    </a>
+
+                </div>
+
+            }
+
+        }
+
+    </div>
+
+ 
+
+    <div class="card-footer d-flex justify-content-between align-items-center">
+
+        <small class="text-muted">🎟️ @Model.TotalBets apuestas realizadas</small>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="d-flex gap-2">
+                @switch (Model.Status)
+                {
+                    case MatchStatus.Scheduled:
+                        <form asp-action="Start" asp-route-id="@Model.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-success btn-sm">Iniciar partido</button>
+                        </form>
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-sm">Editar</a>
+                        break;
+                    case MatchStatus.InProgress:
+                        <a asp-action="Close" asp-route-id="@Model.Id" class="btn btn-outline-danger btn-sm">Cerrar partido</a>
+                        break;
+                    case MatchStatus.Finished:
+                        <span class="text-muted small">Partido cerrado y resuelto</span>
+                        break;
+                }
+            </div>
+        }
+    </div>
+</div>

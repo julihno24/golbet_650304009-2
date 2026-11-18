@@ -84,4 +84,36 @@ public class MatchesController : Controller
         ViewBag.Teams = new SelectList(await _teamService.GetAllAsync(), "Id", "Name", model.HomeTeamId);
         return View(model);
     }
+
+    // --- Acciones del Módulo 9: Iniciar y Cerrar (GET) ---
+
+    // POST /Matches/Start/5
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Start(int id)
+    {
+        try
+        {
+            await _matchService.StartMatchAsync(id);
+            TempData["Success"] = "¡Partido en juego! Las apuestas quedaron cerradas.";
+        }
+        catch (InvalidOperationException ex)
+        {
+            TempData["Error"] = ex.Message;
+        }
+
+        return RedirectToAction(nameof(Detail), new { id });
+    }
+
+    // GET /Matches/Close/5 -> the score form
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> Close(int id)
+    {
+        var match = await _matchService.GetDetailAsync(id);
+        if (match is null) return NotFound();
+
+        ViewBag.Match = match; // header data for the view
+        return View(new MatchResultFormDto { MatchId = id });
+    }
 }
