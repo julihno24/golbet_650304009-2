@@ -8,6 +8,7 @@ using GolBet.Services.Interfaces;
 using GolBet.Services.Mapping;
 using Microsoft.AspNetCore.Identity; // Nuevo para Identity
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 // Configuración de cultura es-CO ajustada por el profesor
 var culture = new CultureInfo("es-CO");
@@ -18,6 +19,9 @@ CultureInfo.DefaultThreadCurrentCulture = culture;
 CultureInfo.DefaultThreadCurrentUICulture = culture;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, config) =>
+    config.ReadFrom.Configuration(context.Configuration));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -41,7 +45,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";            // Redirige al login si no está autenticado
-    options.AccessDeniedPath = "/Account/AccessDenied";  // Redirige si no tiene el rol[cite: 8]
+    options.AccessDeniedPath = "/Account/AccessDenied";  // Redirige si no tiene el rol
 });
 
 // Open generic registration: one line, a repository for every entity
@@ -64,18 +68,22 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Error/General");
     app.UseHsts();
 }
+
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.UseSerilogRequestLogging();
+
 app.UseRouting();
 
 // ---- Pipeline de Autenticación y Autorización (¡El orden importa!) ----
-app.UseAuthentication();   // 1º: Identifica quién eres leyendo la cookie[cite: 8]
-app.UseAuthorization();    // 2º: Decide si tienes permisos según [Authorize][cite: 8]
+app.UseAuthentication();   // 1º: Identifica quién eres leyendo la cookie
+app.UseAuthorization();    // 2º: Decide si tienes permisos según [Authorize]
 
 app.MapControllerRoute(
     name: "default",
